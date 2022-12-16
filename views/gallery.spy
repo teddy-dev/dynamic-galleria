@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{ name }}</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+            html,
+            body {
+                padding: 0;
+                margin: 0;
+                overflow: hidden;
+                background: #121212;
+            }
+            .centered {     
+                position: fixed; /* or absolute */
+                bottom: 25%;
+                left: 50%;
+                /* bring your own prefixes */
+                transform: translate(-50%, -50%);
+                z-index: 250000;
+                color: white;
+                font-family: 'Roboto Mono', monospace;
+                text-align: center;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="galleria">&nbsp;</div>
+        <div class="centered">
+            Navigate with ⬅️ and ➡️.
+        </div>
+        <script src="/jquery.min.js"></script>
+        <script src="/galleria.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $(".galleria").css({
+                    "height": (($(window).height())) + "px"
+                });
+                Galleria.loadTheme("/themes/{{theme}}/galleria.{{theme}}.min.js");
+                Galleria.run(".galleria", {
+                    imageCrop: false,
+                    thumbCrop: true,
+                    fullscreenCrop: true,
+                    clicknext: true,
+                    transition: "fadeslide",
+                    variation: "dark",
+                    transitionSpeed: 1000,
+                    easing: "galleriaOut",
+                    dataSource: {{ data }},
+                    _hideDock: true,
+                    initialTransition: "fade",
+                    extend: function (options) {
+                        if (this.getThemeName() == "classic") {
+                            this.setOptions("imageCrop", true);
+                            this.refreshImage();
+                        }
+                        this.attachKeyboard({
+                            left: this.prev,
+                            right: this.next,
+                            up: function() {
+                                if (this.getThemeName() != "fullscreen") {
+                                    this.toggleFullscreen();
+                                }
+                            },
+                            down: function() {
+                                this.playToggle()
+                            }
+                        });
+                    }
+                });
+                setTimeout(function() { $('.centered').fadeOut(); }, 2500);
+            });
+        </script>
+    </body>
+
+</html>
